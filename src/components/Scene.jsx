@@ -15,7 +15,7 @@ import {
 export function Scene(props) {
   const group = useRef();
   const { nodes, materials, animations } = useGLTF(
-    `${import.meta.env.BASE_URL}speaker-desk-scene.glb`,
+    `${import.meta.env.BASE_URL}speaker-desk-scene-optimised.glb`,
   );
 
   const { actions } = useAnimations(animations, group);
@@ -294,7 +294,7 @@ export function Scene(props) {
                 roughness={0.08}
                 metalness={0}
                 envMapIntensity={1.2}
-            />
+              />
             </mesh>
           </group>
         </group>
@@ -566,4 +566,4 @@ export function Scene(props) {
   );
 }
 
-useGLTF.preload(`${import.meta.env.BASE_URL}speaker-desk-scene.glb`);
+useGLTF.preload(`${import.meta.env.BASE_URL}speaker-desk-scene-optimised.glb`);
