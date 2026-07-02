@@ -285,8 +285,17 @@ export function Scene(props) {
               castShadow
               receiveShadow
               geometry={nodes.Cylinder005_2.geometry}
-              material={materials.Glass}
+              // material={materials.Glass}
+            >
+              <meshPhysicalMaterial
+                color="#ffffff"
+                transparent
+                opacity={0.16}
+                roughness={0.08}
+                metalness={0}
+                envMapIntensity={1.2}
             />
+            </mesh>
           </group>
         </group>
         <mesh
