@@ -4,13 +4,19 @@ import {
   PerspectiveCamera,
   useAnimations,
   Helper,
-  ContactShadows,
 } from "@react-three/drei";
-import { CameraHelper, DirectionalLightHelper, LoopOnce } from "three";
+import {
+  CameraHelper,
+  DirectionalLightHelper,
+  LoopOnce,
+  REVISION,
+} from "three";
 
 export function Scene(props) {
   const group = useRef();
-  const { nodes, materials, animations } = useGLTF("/speaker-desk-scene.glb");
+  const { nodes, materials, animations } = useGLTF(
+    `${import.meta.env.BASE_URL}speaker-desk-scene.glb`,
+  );
 
   const { actions } = useAnimations(animations, group);
   useEffect(() => {
@@ -38,7 +44,7 @@ export function Scene(props) {
         />
         <directionalLight
           name="Starlight_Sun"
-          intensity={5}
+          intensity={15}
           decay={2}
           position={[-10, 5, 10]}
           color={"#ffa239"}
@@ -49,14 +55,6 @@ export function Scene(props) {
             <Helper type={DirectionalLightHelper} args={[5, "yellow"]} />
           )}
         </directionalLight>
-        <pointLight
-          name="Point"
-          intensity={10}
-          decay={2}
-          position={[0, 2.403, 0]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          color={"#ffa239"}
-        />
         <PerspectiveCamera
           name="Camera"
           makeDefault
@@ -211,107 +209,6 @@ export function Scene(props) {
           />
         </group>
         <group
-          name="Individual_Book_Collection_1"
-          position={[0.385, 0.57, -2.451]}
-          rotation={[0, -1.571, 0]}
-        >
-          <group name="factfullness" position={[0, 0, -0.032]}>
-            <mesh
-              name="Cube013"
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube013.geometry}
-              material={materials.factful}
-            />
-            <mesh
-              name="Cube013_1"
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube013_1.geometry}
-              material={materials["edge paper"]}
-            />
-            <mesh
-              name="Cube013_2"
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube013_2.geometry}
-              material={materials["factful.001"]}
-            />
-          </group>
-          <group
-            name="green"
-            position={[0, 0, 0.074]}
-            scale={[0.625, 0.84, 0.833]}
-          >
-            <mesh
-              name="Cube012"
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube012.geometry}
-              material={materials.greenbook}
-            />
-            <mesh
-              name="Cube012_1"
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube012_1.geometry}
-              material={materials["edge paper.001"]}
-            />
-          </group>
-          <group name="how_to">
-            <mesh
-              name="Cube011"
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube011.geometry}
-              material={materials["how to"]}
-            />
-            <mesh
-              name="Cube011_1"
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube011_1.geometry}
-              material={materials["edge paper"]}
-            />
-          </group>
-          <group
-            name="hygge"
-            position={[0.049, 0.014, 0.606]}
-            rotation={[Math.PI / 2, 0, 1.921]}
-          >
-            <mesh
-              name="Cube010"
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube010.geometry}
-              material={materials.hygge}
-            />
-            <mesh
-              name="Cube010_1"
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube010_1.geometry}
-              material={materials["edge paper.002"]}
-            />
-          </group>
-          <group name="sapiens" position={[0, 0, 0.143]}>
-            <mesh
-              name="Cube007"
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube007.geometry}
-              material={materials.sapiens}
-            />
-            <mesh
-              name="Cube007_1"
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube007_1.geometry}
-              material={materials["edge paper"]}
-            />
-          </group>
-        </group>
-        <group
           name="Black_Ballpen"
           position={[0.157, 0.57, -2.325]}
           rotation={[0, -1.212, 0]}
@@ -322,8 +219,17 @@ export function Scene(props) {
               castShadow
               receiveShadow
               geometry={nodes.Cylinder008.geometry}
-              material={materials.Glass}
-            />
+              // material={materials.Glass}
+            >
+              <meshPhysicalMaterial
+                color="#ffffff"
+                transparent
+                opacity={0.16}
+                roughness={0.08}
+                metalness={0}
+                envMapIntensity={1.2}
+              />
+            </mesh>
             <mesh
               name="Cylinder008_1"
               castShadow
@@ -340,24 +246,24 @@ export function Scene(props) {
             />
             <group name="Cylinder005" position={[0.027, 0, 0]}>
               <mesh
-                name="Mesh"
+                name="Cylinder001"
                 castShadow
                 receiveShadow
-                geometry={nodes.Mesh.geometry}
+                geometry={nodes.Cylinder001.geometry}
                 material={materials["Material.002"]}
               />
               <mesh
-                name="Mesh_1"
+                name="Cylinder001_1"
                 castShadow
                 receiveShadow
-                geometry={nodes.Mesh_1.geometry}
+                geometry={nodes.Cylinder001_1.geometry}
                 material={materials["Material.005"]}
               />
               <mesh
-                name="Mesh_2"
+                name="Cylinder001_2"
                 castShadow
                 receiveShadow
-                geometry={nodes.Mesh_2.geometry}
+                geometry={nodes.Cylinder001_2.geometry}
                 material={materials["Material.006"]}
               />
             </group>
@@ -383,43 +289,99 @@ export function Scene(props) {
             />
           </group>
         </group>
-        <group name="TV_Cabinet" position={[0, 0, -2.379]}>
+        <mesh
+          name="TV_Cabinet"
+          castShadow
+          receiveShadow
+          geometry={nodes.TV_Cabinet.geometry}
+          material={materials["Cabinet Body_Wood"]}
+          position={[0, 0, -2.379]}
+        />
+
+        <mesh
+          name="TV_Cabinet001"
+          castShadow
+          receiveShadow
+          geometry={nodes.TV_Cabinet001.geometry}
+          material={materials["Desk wood"]}
+          position={[0, 0, -2.379]}
+        />
+        <mesh
+          name="TV_Cabinet002"
+          castShadow
+          receiveShadow
+          geometry={nodes.TV_Cabinet002.geometry}
+          material={materials["Desk wood"]}
+          position={[0, 0, -2.379]}
+        />
+        <group name="TV_Cabinet003" position={[0, 0, -2.379]}>
           <mesh
-            name="Kostka"
+            name="Kostka003"
             castShadow
             receiveShadow
-            geometry={nodes.Kostka.geometry}
+            geometry={nodes.Kostka003.geometry}
             material={materials["Desk wood"]}
           />
           <mesh
-            name="Kostka_1"
+            name="Kostka003_1"
             castShadow
             receiveShadow
-            geometry={nodes.Kostka_1.geometry}
+            geometry={nodes.Kostka003_1.geometry}
             material={materials["Glass.001"]}
           />
+        </group>
+        <group name="TV_Cabinet004" position={[0, 0, -2.379]}>
           <mesh
-            name="Kostka_2"
+            name="Kostka004"
             castShadow
             receiveShadow
-            geometry={nodes.Kostka_2.geometry}
-            material={materials.Metal}
+            geometry={nodes.Kostka004.geometry}
+            material={materials["Desk wood"]}
           />
           <mesh
-            name="Kostka_3"
+            name="Kostka004_1"
             castShadow
             receiveShadow
-            geometry={nodes.Kostka_3.geometry}
-            material={materials["Metal.001"]}
-          />
-          <mesh
-            name="Kostka_4"
-            castShadow
-            receiveShadow
-            geometry={nodes.Kostka_4.geometry}
-            material={materials["Desk wood.001"]}
+            geometry={nodes.Kostka004_1.geometry}
+            material={materials["Glass.001"]}
           />
         </group>
+        <group name="TV_Cabinet005" position={[0, 0, -2.379]} />
+        <mesh
+          name="TV_Cabinet006"
+          castShadow
+          receiveShadow
+          geometry={nodes.TV_Cabinet006.geometry}
+          material={materials.Metal}
+          position={[0, 0, -2.379]}
+        />
+        <group name="TV_Cabinet007" position={[0, 0, -2.379]} />
+        <mesh
+          name="TV_Cabinet008"
+          castShadow
+          receiveShadow
+          geometry={nodes.TV_Cabinet008.geometry}
+          material={materials["Desk wood"]}
+          position={[0, 0, -2.379]}
+        />
+        <group name="TV_Cabinet009" position={[0, 0, -2.379]} />
+        <mesh
+          name="TV_Cabinet010"
+          castShadow
+          receiveShadow
+          geometry={nodes.TV_Cabinet010.geometry}
+          material={materials.Metal}
+          position={[0, 0, -2.379]}
+        />
+        <group name="TV_Cabinet011" position={[0, 0, -2.379]} />
+        <mesh
+          name="TV_Cabinet012"
+          castShadow
+          receiveShadow
+          geometry={nodes.TV_Cabinet012.geometry}
+          material={materials["Desk wood"]}
+          position={[0, 0, -2.379]}
+        />
         <group
           name="Table_Lamp"
           position={[-0.477, 0.57, -2.435]}
@@ -427,7 +389,7 @@ export function Scene(props) {
         >
           <pointLight
             name="Point001"
-            intensity={0.2}
+            intensity={0.3}
             decay={2}
             position={[0, 0.131, 0]}
             rotation={[-Math.PI / 2, 0, 0]}
@@ -484,9 +446,115 @@ export function Scene(props) {
             position={[0, 0.038, 0.271]}
           />
         </group>
+        <group
+          name="Books001"
+          position={[0.347, 0.57, -2.466]}
+          rotation={[0, -Math.PI / 2, 0]}
+        >
+          <group
+            name="green001"
+            position={[0.084, 0.009, 0.55]}
+            rotation={[0, 1.302, 0]}
+          >
+            <mesh
+              name="Cube001"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube001.geometry}
+              material={materials.paper}
+            />
+            <mesh
+              name="Cube001_1"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube001_1.geometry}
+              material={materials.green}
+            />
+          </group>
+          <group name="green002" position={[0, 0, 0.306]}>
+            <mesh
+              name="Cube002"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube002.geometry}
+              material={materials.paper}
+            />
+            <mesh
+              name="Cube002_1"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube002_1.geometry}
+              material={materials.green}
+            />
+          </group>
+          <group name="green004" position={[0, 0, 0.306]}>
+            <mesh
+              name="Cube004"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube004.geometry}
+              material={materials.paper}
+            />
+            <mesh
+              name="Cube004_1"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube004_1.geometry}
+              material={materials.brown}
+            />
+          </group>
+          <group name="green006" position={[0, 0, 0.306]}>
+            <mesh
+              name="Cube008"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube008.geometry}
+              material={materials.paper}
+            />
+            <mesh
+              name="Cube008_1"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube008_1.geometry}
+              material={materials.green}
+            />
+          </group>
+          <group name="green007" position={[0, 0, 0.306]}>
+            <mesh
+              name="Cube009"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube009.geometry}
+              material={materials.paper}
+            />
+            <mesh
+              name="Cube009_1"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube009_1.geometry}
+              material={materials.blue}
+            />
+          </group>
+          <group name="green009" position={[0, 0, 0.306]}>
+            <mesh
+              name="Cube015"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube015.geometry}
+              material={materials.paper}
+            />
+            <mesh
+              name="Cube015_1"
+              castShadow
+              receiveShadow
+              geometry={nodes.Cube015_1.geometry}
+              material={materials.blue}
+            />
+          </group>
+        </group>
       </group>
     </group>
   );
 }
 
-useGLTF.preload("/speaker-desk-scene.glb");
+useGLTF.preload(`${import.meta.env.BASE_URL}speaker-desk-scene.glb`);
