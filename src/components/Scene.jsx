@@ -39,8 +39,6 @@ export function Scene(props) {
           receiveShadow
           geometry={nodes.Room.geometry}
           material={materials["Painted Plaster Wall"]}
-          rotation={[0, Math.PI / 2, 0]}
-          scale={5.989}
         />
         <directionalLight
           name="Starlight_Sun"
@@ -50,6 +48,8 @@ export function Scene(props) {
           color={"#ffa239"}
           castShadow
           shadow-mapSize={[2048, 2048]}
+          shadow-bias={-0.00002}
+          shadow-normalBias={0.0027}
         >
           {import.meta.env.DEV && (
             <Helper type={DirectionalLightHelper} args={[5, "yellow"]} />
@@ -75,39 +75,30 @@ export function Scene(props) {
         >
           <mesh
             name="Cube064"
-            castShadow={false}
-            receiveShadow={false}
+            castShadow
+            receiveShadow
             geometry={nodes.Cube064.geometry}
-            // material={materials["1 bh6601_1_face_vidro_transparente"]}
-          >
-            <meshStandardMaterial transparent opacity={0.05} color="white" />
-          </mesh>
+            material={materials["esquadria branca"]}
+          />
           <mesh
             name="Cube064_1"
             castShadow
             receiveShadow
             geometry={nodes.Cube064_1.geometry}
-            material={materials["esquadria branca"]}
+            material={materials["Borracha preta"]}
           />
           <mesh
             name="Cube064_2"
             castShadow
             receiveShadow
             geometry={nodes.Cube064_2.geometry}
-            material={materials["Borracha preta"]}
+            material={materials["Plastico preto"]}
           />
           <mesh
             name="Cube064_3"
             castShadow
             receiveShadow
             geometry={nodes.Cube064_3.geometry}
-            material={materials["Plastico preto"]}
-          />
-          <mesh
-            name="Cube064_4"
-            castShadow
-            receiveShadow
-            geometry={nodes.Cube064_4.geometry}
             material={materials.Vermelho3425}
           />
         </group>
@@ -127,7 +118,6 @@ export function Scene(props) {
             geometry={nodes.ground_real.geometry}
             material={materials["Mud and grass"]}
             position={[0, 0.025, 0]}
-            scale={0.053}
           />
           <mesh
             name="succulent_plant"
@@ -138,23 +128,10 @@ export function Scene(props) {
             position={[0, 0.076, 0]}
           />
         </mesh>
-        <group
-          name="Speaker"
-          position={[0, 0.57, -2.303]}
-          rotation={[Math.PI, 0, Math.PI]}
-        >
-          <mesh
-            name="Action_Button"
-            castShadow
-            receiveShadow
-            geometry={nodes.Action_Button.geometry}
-            material={materials["Material.007"]}
-            position={[0, 0.022, 0]}
-          />
+        <group name="Speaker" position={[0, 0.57, -2.303]}>
           <mesh
             name="Bottom_Panel"
-            castShadow
-            receiveShadow
+
             geometry={nodes.Bottom_Panel.geometry}
             material={materials["Material.004"]}
             position={[0, 0.022, 0]}
@@ -168,41 +145,44 @@ export function Scene(props) {
             position={[0, 0.022, 0]}
           />
           <mesh
-            name="Mic_Off_Button"
-            castShadow
-            receiveShadow
-            geometry={nodes.Mic_Off_Button.geometry}
+            name="PlayPause_Button"
+
+            geometry={nodes.PlayPause_Button.geometry}
+            material={materials["Material.007"]}
+            position={[0, 0.022, 0]}
+          />
+          <mesh
+            name="Power_Button"
+
+            geometry={nodes.Power_Button.geometry}
             material={materials["Material.007"]}
             position={[0, 0.022, 0]}
           />
           <mesh
             name="Speaker_Mesh"
             castShadow
-            receiveShadow
+
             geometry={nodes.Speaker_Mesh.geometry}
-            material={materials["Material.011"]}
+            material={materials["Fabric mesh"]}
             position={[0, 0.022, 0]}
           />
           <mesh
             name="Top_Panel"
-            castShadow
-            receiveShadow
+
             geometry={nodes.Top_Panel.geometry}
             material={materials["Material.010"]}
             position={[0, 0.022, 0]}
           />
           <mesh
             name="Volume_Down_Button"
-            castShadow
-            receiveShadow
+
             geometry={nodes.Volume_Down_Button.geometry}
             material={materials["Material.007"]}
             position={[0, 0.022, 0]}
           />
           <mesh
             name="Volume_Up_Button"
-            castShadow
-            receiveShadow
+
             geometry={nodes.Volume_Up_Button.geometry}
             material={materials["Material.007"]}
             position={[0, 0.022, 0]}
@@ -216,8 +196,6 @@ export function Scene(props) {
           <group name="Pen_Body" position={[-0.003, 0.005, 0]}>
             <mesh
               name="Cylinder008"
-              castShadow
-              receiveShadow
               geometry={nodes.Cylinder008.geometry}
               // material={materials.Glass}
             >
@@ -232,8 +210,7 @@ export function Scene(props) {
             </mesh>
             <mesh
               name="Cylinder008_1"
-              castShadow
-              receiveShadow
+
               geometry={nodes.Cylinder008_1.geometry}
               material={materials["Material.005"]}
             />
@@ -247,15 +224,13 @@ export function Scene(props) {
             <group name="Cylinder005" position={[0.027, 0, 0]}>
               <mesh
                 name="Cylinder001"
-                castShadow
-                receiveShadow
+
                 geometry={nodes.Cylinder001.geometry}
                 material={materials["Material.002"]}
               />
               <mesh
                 name="Cylinder001_1"
-                castShadow
-                receiveShadow
+
                 geometry={nodes.Cylinder001_1.geometry}
                 material={materials["Material.005"]}
               />
@@ -282,8 +257,7 @@ export function Scene(props) {
             />
             <mesh
               name="Cylinder005_2"
-              castShadow
-              receiveShadow
+
               geometry={nodes.Cylinder005_2.geometry}
               // material={materials.Glass}
             >
@@ -306,106 +280,16 @@ export function Scene(props) {
           material={materials["Cabinet Body_Wood"]}
           position={[0, 0, -2.379]}
         />
-
-        <mesh
-          name="TV_Cabinet001"
-          castShadow
-          receiveShadow
-          geometry={nodes.TV_Cabinet001.geometry}
-          material={materials["Desk wood"]}
-          position={[0, 0, -2.379]}
-        />
-        <mesh
-          name="TV_Cabinet002"
-          castShadow
-          receiveShadow
-          geometry={nodes.TV_Cabinet002.geometry}
-          material={materials["Desk wood"]}
-          position={[0, 0, -2.379]}
-        />
-        <group name="TV_Cabinet003" position={[0, 0, -2.379]}>
-          <mesh
-            name="Kostka003"
-            castShadow
-            receiveShadow
-            geometry={nodes.Kostka003.geometry}
-            material={materials["Desk wood"]}
-          />
-          <mesh
-            name="Kostka003_1"
-            castShadow
-            receiveShadow
-            geometry={nodes.Kostka003_1.geometry}
-            material={materials["Glass.001"]}
-          />
-        </group>
-        <group name="TV_Cabinet004" position={[0, 0, -2.379]}>
-          <mesh
-            name="Kostka004"
-            castShadow
-            receiveShadow
-            geometry={nodes.Kostka004.geometry}
-            material={materials["Desk wood"]}
-          />
-          <mesh
-            name="Kostka004_1"
-            castShadow
-            receiveShadow
-            geometry={nodes.Kostka004_1.geometry}
-            material={materials["Glass.001"]}
-          />
-        </group>
-        <group name="TV_Cabinet005" position={[0, 0, -2.379]} />
-        <mesh
-          name="TV_Cabinet006"
-          castShadow
-          receiveShadow
-          geometry={nodes.TV_Cabinet006.geometry}
-          material={materials.Metal}
-          position={[0, 0, -2.379]}
-        />
-        <group name="TV_Cabinet007" position={[0, 0, -2.379]} />
-        <mesh
-          name="TV_Cabinet008"
-          castShadow
-          receiveShadow
-          geometry={nodes.TV_Cabinet008.geometry}
-          material={materials["Desk wood"]}
-          position={[0, 0, -2.379]}
-        />
-        <group name="TV_Cabinet009" position={[0, 0, -2.379]} />
-        <mesh
-          name="TV_Cabinet010"
-          castShadow
-          receiveShadow
-          geometry={nodes.TV_Cabinet010.geometry}
-          material={materials.Metal}
-          position={[0, 0, -2.379]}
-        />
-        <group name="TV_Cabinet011" position={[0, 0, -2.379]} />
-        <mesh
-          name="TV_Cabinet012"
-          castShadow
-          receiveShadow
-          geometry={nodes.TV_Cabinet012.geometry}
-          material={materials["Desk wood"]}
-          position={[0, 0, -2.379]}
-        />
-        <group
-          name="Table_Lamp"
-          position={[-0.477, 0.57, -2.435]}
-          rotation={[Math.PI, 0, Math.PI]}
-        >
+        <group name="Table_Lamp" position={[-0.477, 0.57, -2.435]}>
           <pointLight
             name="Point001"
-            intensity={0.3}
+            intensity={0.8}
             decay={2}
             position={[0, 0.131, 0]}
             rotation={[-Math.PI / 2, 0, 0]}
             color={"#ffa239"}
-            castShadow
           />
-          <group name="Sphere001" position={[0, 0.15, 0]} scale={1.11}>
+          <group name="Sphere001" position={[0, 0.15, 0]}>
             <mesh
               name="Sphere002"
               geometry={nodes.Sphere002.geometry}
@@ -413,47 +297,11 @@ export function Scene(props) {
             />
             <mesh
               name="Sphere002_1"
-              castShadow
-              receiveShadow
+
               geometry={nodes.Sphere002_1.geometry}
               material={materials["Brushed metal"]}
             />
           </group>
-        </group>
-        <group
-          name="Simple_Television_(Wall_Mounted)"
-          position={[0, 1.095, -2.579]}
-          rotation={[Math.PI / 2, 0, 0]}
-        >
-          <mesh
-            name="Plane006"
-            castShadow
-            receiveShadow
-            geometry={nodes.Plane006.geometry}
-            material={materials["TV Aluminium"]}
-          />
-          <mesh
-            name="Plane006_1"
-            castShadow
-            receiveShadow
-            geometry={nodes.Plane006_1.geometry}
-            material={materials["TV Screen Glass"]}
-          />
-          <mesh
-            name="TV_Back_Panel"
-            castShadow
-            receiveShadow
-            geometry={nodes.TV_Back_Panel.geometry}
-            material={materials["TV Aluminium"]}
-          />
-          <mesh
-            name="TV_Sensor_Panel"
-            castShadow
-            receiveShadow
-            geometry={nodes.TV_Sensor_Panel.geometry}
-            material={materials["TV Aluminium"]}
-            position={[0, 0.038, 0.271]}
-          />
         </group>
         <group
           name="Books001"
