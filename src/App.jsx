@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { Scene } from "./components/Scene";
-import { Environment } from "@react-three/drei";
+import { Environment, OrbitControls } from "@react-three/drei";
 import { Suspense } from "react";
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
             environmentIntensity={4}
           />
         </Suspense>
+        {/* <OrbitControls /> */}
       </Canvas>
     </div>
   );

@@ -1,19 +1,27 @@
-import { useEffect, useRef } from "react";
 import {
-  useGLTF,
+  Helper,
   PerspectiveCamera,
   useAnimations,
-  Helper,
+  useGLTF,
+  useTexture,
 } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useEffect, useMemo, useRef } from "react";
+import { createNoise2D } from "simplex-noise";
 import {
   CameraHelper,
   DirectionalLightHelper,
+  DoubleSide,
   LoopOnce,
-  REVISION,
+  SpotLightHelper,
+  Vector3,
 } from "three";
 
 export function Scene(props) {
   const group = useRef();
+  const leafTexture = useTexture(`${import.meta.env.BASE_URL}leaf-gobo.webp`);
+  const leafPlaneRef = useRef();
+
   const { nodes, materials, animations } = useGLTF(
     `${import.meta.env.BASE_URL}speaker-desk-scene-optimised.glb`,
   );
@@ -29,6 +37,20 @@ export function Scene(props) {
       }
     }, 1000);
   }, [actions.CameraAction]);
+
+  const noise2D = useMemo(() => createNoise2D(), []);
+  const basePosition = useRef(new Vector3(-3.5, 2, 0.8));
+
+  useFrame((state) => {
+    if (!leafPlaneRef.current) return;
+    const t = state.clock.elapsedTime;
+
+    const noiseX = noise2D(t * 0.15, 0);
+    const noiseRotZ = noise2D(t * 0.15, 200);
+
+    leafPlaneRef.current.position.x = basePosition.current.x + noiseX * 0.01;
+    leafPlaneRef.current.rotation.z = noiseRotZ * 0.03;
+  });
 
   return (
     <group ref={group} {...props} dispose={null}>
@@ -47,7 +69,7 @@ export function Scene(props) {
           position={[-10, 5, 10]}
           color={"#ffa239"}
           castShadow
-          shadow-mapSize={[2048, 2048]}
+          shadow-mapSize={[1024 * 8, 1024 * 8]}
           shadow-bias={-0.00002}
           shadow-normalBias={0.0027}
         >
@@ -55,6 +77,20 @@ export function Scene(props) {
             <Helper type={DirectionalLightHelper} args={[5, "yellow"]} />
           )}
         </directionalLight>
+        <mesh
+          ref={leafPlaneRef}
+          position={[-3.5, 2, 0.8]}
+          rotation={[-Math.PI / 10, -Math.PI / 6, 0]}
+          castShadow
+        >
+          <planeGeometry args={[1.25, 1.25]} />
+          <meshBasicMaterial
+            alphaMap={leafTexture}
+            alphaTest={0.5}
+            transparent
+            side={DoubleSide}
+          />
+        </mesh>
         <PerspectiveCamera
           name="Camera"
           makeDefault
@@ -283,17 +319,21 @@ export function Scene(props) {
         <group name="Table_Lamp" position={[-0.477, 0.57, -2.435]}>
           <pointLight
             name="Point001"
-            intensity={0.8}
+            intensity={2}
             decay={2}
             position={[0, 0.131, 0]}
             rotation={[-Math.PI / 2, 0, 0]}
             color={"#ffa239"}
+            castShadow
+            shadow-mapSize={[1024, 1024]}
+            shadow-normalBias={0.002}
           />
           <group name="Sphere001" position={[0, 0.15, 0]}>
             <mesh
               name="Sphere002"
               geometry={nodes.Sphere002.geometry}
               material={materials.Bulb}
+              castShadow
             />
             <mesh
               name="Sphere002_1"
