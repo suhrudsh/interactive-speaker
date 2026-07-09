@@ -16,11 +16,13 @@ import {
   SpotLightHelper,
   Vector3,
 } from "three";
+import { RingEmissiveMaterial } from "../shaders/ring/RingEmissiveMaterial";
 
 export function Scene(props) {
   const group = useRef();
   const leafTexture = useTexture(`${import.meta.env.BASE_URL}leaf-gobo.webp`);
   const leafPlaneRef = useRef();
+  const lightRingMaterialRef = useRef();
 
   const { nodes, materials, animations } = useGLTF(
     `${import.meta.env.BASE_URL}speaker-desk-scene-optimised.glb`,
@@ -50,6 +52,13 @@ export function Scene(props) {
 
     leafPlaneRef.current.position.x = basePosition.current.x + noiseX * 0.01;
     leafPlaneRef.current.rotation.z = noiseRotZ * 0.03;
+  });
+
+  useFrame((state) => {
+    if (lightRingMaterialRef.current) {
+      lightRingMaterialRef.current.uniforms.uRotationOffset.value =
+        state.clock.elapsedTime * 0.2;
+    }
   });
 
   return (
@@ -177,9 +186,11 @@ export function Scene(props) {
             castShadow
             receiveShadow
             geometry={nodes.Light_Ring.geometry}
-            material={materials["Material.001"]}
+            // material={materials["Material.001"]}
             position={[0, 0.022, 0]}
-          />
+          >
+            <RingEmissiveMaterial ref={lightRingMaterialRef} />
+          </mesh>
           <mesh
             name="PlayPause_Button"
 
