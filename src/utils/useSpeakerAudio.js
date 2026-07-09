@@ -95,5 +95,11 @@ export function useSpeakerAudio() {
     return sum / dataRef.current.length / 255;
   }, []);
 
-  return { toggle, getLevel, isPlaying, currentTrack: () => trackRef.current };
+  return {
+    toggle,
+    getLevel,
+    isPlaying,
+    audioEl: audioElRef.current,
+    currentTrack: () => trackRef.current,
+  };
 }

@@ -64,7 +64,7 @@ export function Scene(props) {
     leafPlaneRef.current.rotation.z = noiseRotZ * 0.03;
   });
 
-  const { toggle, getLevel, isPlaying } = useSpeakerAudio();
+  const { toggle, getLevel, isPlaying, audioEl } = useSpeakerAudio();
 
   useFrame((state, delta) => {
     const level = getLevel();
@@ -72,6 +72,15 @@ export function Scene(props) {
       delta * 0.02 * (level + 10);
     lightRingMaterialRef.current.uniforms.uAudioLevel.value = 1 + level;
   });
+
+  function handleVolumeUp() {
+    audioEl.volume = Math.min(audioEl.volume + 0.1, 1);
+    console.log("Current volume:", audioEl.volume);
+  }
+  function handleVolumeDown() {
+    audioEl.volume = Math.max(audioEl.volume - 0.1, 0);
+    console.log("Current volume:", audioEl.volume);
+  }
 
   return (
     <group ref={group} {...props} dispose={null}>
@@ -238,6 +247,7 @@ export function Scene(props) {
           <mesh
             ref={volumeDownButtonRef}
             name="Volume_Down_Button"
+            onClick={handleVolumeDown}
             onPointerOver={() => setHovered(true)}
             onPointerOut={() => setHovered(false)}
             geometry={nodes.Volume_Down_Button.geometry}
@@ -247,6 +257,7 @@ export function Scene(props) {
           <mesh
             ref={volumeUpButtonRef}
             name="Volume_Up_Button"
+            onClick={handleVolumeUp}
             onPointerOver={() => setHovered(true)}
             onPointerOut={() => setHovered(false)}
             geometry={nodes.Volume_Up_Button.geometry}
