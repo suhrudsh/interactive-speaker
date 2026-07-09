@@ -47,9 +47,10 @@ export function useSpeakerAudio() {
     analyserRef.current = analyser;
     dataRef.current = new Uint8Array(analyser.frequencyBinCount);
 
-    audioEl.addEventListener("ended", () => {
-      advanceToNext();
-    });
+    audioEl.addEventListener("ended", advanceToNext);
+    audioEl.addEventListener("pause", () => setIsPlaying(false));
+    audioEl.addEventListener("play", () => setIsPlaying(true));
+
     audioEl.play();
     setIsPlaying(true);
   }, []);
@@ -80,6 +81,10 @@ export function useSpeakerAudio() {
   useEffect(() => {
     return () => {
       audioElRef.current?.removeEventListener("ended", advanceToNext);
+      audioElRef.current?.removeEventListener("pause", () =>
+        setIsPlaying(false),
+      );
+      audioElRef.current?.removeEventListener("play", () => setIsPlaying(true));
     };
   }, [advanceToNext]);
 
