@@ -1,0 +1,72 @@
+[
+  {
+    "id": "01",
+    "title": "Good Night - Lofi Cozy Chill Music",
+    "artist": "FASSounds",
+    "src": "/interactive-speaker/audio/track-01.mp3",
+    "duration": 147
+  },
+  {
+    "id": "02",
+    "title": "Lofi Study - Calm Peaceful Chill Hop",
+    "artist": "FASSounds",
+    "src": "/interactive-speaker/audio/track-02.mp3",
+    "duration": 147
+  },
+  {
+    "id": "03",
+    "title": "LoFi - LoFi Music - Lofi Chill",
+    "artist": "MondaMusic",
+    "src": "/interactive-speaker/audio/track-03.mp3",
+    "duration": 147
+  },
+  {
+    "id": "04",
+    "title": "Lofi - Lofi Girl - Lofi Music",
+    "artist": "MondaMusic",
+    "src": "/interactive-speaker/audio/track-04.mp3",
+    "duration": 130
+  },
+  {
+    "id": "05",
+    "title": "LoFi - LoFi Music",
+    "artist": "The_Mountain",
+    "src": "/interactive-speaker/audio/track-05.mp3",
+    "duration": 102
+  },
+  {
+    "id": "06",
+    "title": "Lofi girl chill lofi beats - lofi ambient",
+    "artist": "Lofi_Music_Library",
+    "src": "/interactive-speaker/audio/track-06.mp3",
+    "duration": 182
+  },
+  {
+    "id": "07",
+    "title": "Lofi Mellow",
+    "artist": "PulseBox",
+    "src": "/interactive-speaker/audio/track-07.mp3",
+    "duration": 135
+  },
+  {
+    "id": "08",
+    "title": "Lofi Night",
+    "artist": "PulseBox",
+    "src": "/interactive-speaker/audio/track-08.mp3",
+    "duration": 124
+  },
+  {
+    "id": "09",
+    "title": "Lofi Beats",
+    "artist": "mirostar",
+    "src": "/interactive-speaker/audio/track-09.mp3",
+    "duration": 111
+  },
+  {
+    "id": "10",
+    "title": "Lofi Hip-Hop",
+    "artist": "leberch",
+    "src": "/interactive-speaker/audio/track-10.mp3",
+    "duration": 78
+  }
+]

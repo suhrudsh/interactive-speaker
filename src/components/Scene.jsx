@@ -2,11 +2,12 @@ import {
   Helper,
   PerspectiveCamera,
   useAnimations,
+  useCursor,
   useGLTF,
   useTexture,
 } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createNoise2D } from "simplex-noise";
 import {
   CameraHelper,
@@ -17,12 +18,21 @@ import {
   Vector3,
 } from "three";
 import { RingEmissiveMaterial } from "../shaders/ring/RingEmissiveMaterial";
+import { useSpeakerAudio } from "../utils/useSpeakerAudio";
+import gsap from "gsap";
 
 export function Scene(props) {
   const group = useRef();
   const leafTexture = useTexture(`${import.meta.env.BASE_URL}leaf-gobo.webp`);
   const leafPlaneRef = useRef();
   const lightRingMaterialRef = useRef();
+  const playButtonRef = useRef();
+  const powerButtonRef = useRef();
+  const volumeUpButtonRef = useRef();
+  const volumeDownButtonRef = useRef();
+
+  const [hovered, setHovered] = useState(false);
+  useCursor(hovered);
 
   const { nodes, materials, animations } = useGLTF(
     `${import.meta.env.BASE_URL}speaker-desk-scene-optimised.glb`,
@@ -54,11 +64,13 @@ export function Scene(props) {
     leafPlaneRef.current.rotation.z = noiseRotZ * 0.03;
   });
 
-  useFrame((state) => {
-    if (lightRingMaterialRef.current) {
-      lightRingMaterialRef.current.uniforms.uRotationOffset.value =
-        state.clock.elapsedTime * 0.2;
-    }
+  const { toggle, getLevel, isPlaying } = useSpeakerAudio();
+
+  useFrame((state, delta) => {
+    const level = getLevel();
+    lightRingMaterialRef.current.uniforms.uRotationOffset.value +=
+      delta * 0.02 * (level + 10);
+    lightRingMaterialRef.current.uniforms.uAudioLevel.value = 1 + level;
   });
 
   return (
@@ -192,15 +204,20 @@ export function Scene(props) {
             <RingEmissiveMaterial ref={lightRingMaterialRef} />
           </mesh>
           <mesh
+            ref={playButtonRef}
             name="PlayPause_Button"
-
+            onClick={toggle}
+            onPointerOver={() => setHovered(true)}
+            onPointerOut={() => setHovered(false)}
             geometry={nodes.PlayPause_Button.geometry}
             material={materials["Material.007"]}
             position={[0, 0.022, 0]}
           />
           <mesh
+            ref={powerButtonRef}
             name="Power_Button"
-
+            onPointerOver={() => setHovered(true)}
+            onPointerOut={() => setHovered(false)}
             geometry={nodes.Power_Button.geometry}
             material={materials["Material.007"]}
             position={[0, 0.022, 0]}
@@ -208,28 +225,30 @@ export function Scene(props) {
           <mesh
             name="Speaker_Mesh"
             castShadow
-
             geometry={nodes.Speaker_Mesh.geometry}
             material={materials["Fabric mesh"]}
             position={[0, 0.022, 0]}
           />
           <mesh
             name="Top_Panel"
-
             geometry={nodes.Top_Panel.geometry}
             material={materials["Material.010"]}
             position={[0, 0.022, 0]}
           />
           <mesh
+            ref={volumeDownButtonRef}
             name="Volume_Down_Button"
-
+            onPointerOver={() => setHovered(true)}
+            onPointerOut={() => setHovered(false)}
             geometry={nodes.Volume_Down_Button.geometry}
             material={materials["Material.007"]}
             position={[0, 0.022, 0]}
           />
           <mesh
+            ref={volumeUpButtonRef}
             name="Volume_Up_Button"
-
+            onPointerOver={() => setHovered(true)}
+            onPointerOut={() => setHovered(false)}
             geometry={nodes.Volume_Up_Button.geometry}
             material={materials["Material.007"]}
             position={[0, 0.022, 0]}
