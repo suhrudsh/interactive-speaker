@@ -1,4 +1,3 @@
-// RingEmissiveMaterial.jsx
 import { useMemo } from "react";
 import * as THREE from "three";
 

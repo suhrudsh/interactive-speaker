@@ -40,15 +40,16 @@ export function Scene(props) {
 
   const { actions } = useAnimations(animations, group);
   useEffect(() => {
-    setTimeout(() => {
-      if (actions.CameraAction) {
-        actions.CameraAction.reset() // start from beginning
-          .setLoop(LoopOnce, 1).clampWhenFinished = // play once
-          true; // hold the last frame
-        actions.CameraAction.play();
-      }
+    if (!actions.CameraAction) return;
+
+    const timeoutId = setTimeout(() => {
+      actions.CameraAction.reset().setLoop(LoopOnce, 1);
+      actions.CameraAction.clampWhenFinished = true;
+      actions.CameraAction.play();
     }, 1000);
-  }, [actions.CameraAction]);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   const noise2D = useMemo(() => createNoise2D(), []);
   const basePosition = useRef(new Vector3(-3.5, 2, 0.8));
