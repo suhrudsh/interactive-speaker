@@ -1,4 +1,3 @@
-// useSpeakerAudio.js
 import { useRef, useCallback, useState, useEffect } from "react";
 
 export function useSpeakerAudio() {
@@ -9,6 +8,9 @@ export function useSpeakerAudio() {
   const tracksRef = useRef(null); // cache the fetched list
   const ctxRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const handlePauseRef = useRef(() => setIsPlaying(false));
+  const handlePlayRef = useRef(() => setIsPlaying(true));
+  const handleEndedRef = useRef();
 
   const loadTracks = useCallback(async () => {
     if (!tracksRef.current) {
@@ -28,9 +30,15 @@ export function useSpeakerAudio() {
   }, []);
 
   const playTrack = useCallback((track) => {
+    // clean up listeners on the previous element before swapping
+    if (audioElRef.current) {
+      audioElRef.current.removeEventListener("ended", handleEndedRef.current);
+      audioElRef.current.removeEventListener("pause", handlePauseRef.current);
+      audioElRef.current.removeEventListener("play", handlePlayRef.current);
+    }
+
     trackRef.current = track;
 
-    // reuse one AudioContext across the whole session
     if (!ctxRef.current) {
       ctxRef.current = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -47,9 +55,9 @@ export function useSpeakerAudio() {
     analyserRef.current = analyser;
     dataRef.current = new Uint8Array(analyser.frequencyBinCount);
 
-    audioEl.addEventListener("ended", advanceToNext);
-    audioEl.addEventListener("pause", () => setIsPlaying(false));
-    audioEl.addEventListener("play", () => setIsPlaying(true));
+    audioEl.addEventListener("ended", handleEndedRef.current);
+    audioEl.addEventListener("pause", handlePauseRef.current);
+    audioEl.addEventListener("play", handlePlayRef.current);
 
     audioEl.play();
     setIsPlaying(true);
@@ -59,6 +67,8 @@ export function useSpeakerAudio() {
     const tracks = await loadTracks();
     playTrack(pickNextTrack(tracks));
   }, [loadTracks, pickNextTrack, playTrack]);
+
+  handleEndedRef.current = advanceToNext; // keep it current without changing identity
 
   const toggle = useCallback(async () => {
     // Nothing loaded yet — start the shuffle
@@ -80,13 +90,11 @@ export function useSpeakerAudio() {
   // cleanup the 'ended' listener when a track is swapped/unmounted
   useEffect(() => {
     return () => {
-      audioElRef.current?.removeEventListener("ended", advanceToNext);
-      audioElRef.current?.removeEventListener("pause", () =>
-        setIsPlaying(false),
-      );
-      audioElRef.current?.removeEventListener("play", () => setIsPlaying(true));
+      audioElRef.current?.removeEventListener("ended", handleEndedRef.current);
+      audioElRef.current?.removeEventListener("pause", handlePauseRef.current);
+      audioElRef.current?.removeEventListener("play", handlePlayRef.current);
     };
-  }, [advanceToNext]);
+  }, []);
 
   const getLevel = useCallback(() => {
     if (!analyserRef.current) return 0;
