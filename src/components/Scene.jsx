@@ -31,6 +31,8 @@ export function Scene(props) {
   const volumeUpButtonRef = useRef();
   const volumeDownButtonRef = useRef();
 
+  const [isPowerOn, setIsPowerOn] = useState(false);
+
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
 
@@ -68,6 +70,7 @@ export function Scene(props) {
   const { toggle, getLevel, isPlaying, audioEl } = useSpeakerAudio();
 
   useFrame((state, delta) => {
+    if (!lightRingMaterialRef.current || !isPowerOn) return;
     const level = getLevel();
     lightRingMaterialRef.current.uniforms.uRotationOffset.value +=
       delta * 0.02 * (level + 10);
@@ -81,6 +84,19 @@ export function Scene(props) {
   function handleVolumeDown() {
     audioEl.volume = Math.max(audioEl.volume - 0.1, 0);
     console.log("Current volume:", audioEl.volume);
+  }
+
+  function handlePowerToggle() {
+    if (isPowerOn) setIsPowerOn(false);
+    if (isPlaying) toggle();
+    gsap.to(lightRingMaterialRef.current.uniforms.uPowerProgress, {
+      value: isPowerOn ? 0 : 1,
+      duration: 1.2,
+      ease: isPowerOn ? "power2.in" : "power2.out",
+      onComplete: () => {
+        if (!isPowerOn) setIsPowerOn(true);
+      },
+    });
   }
 
   return (
@@ -216,7 +232,7 @@ export function Scene(props) {
           <mesh
             ref={playButtonRef}
             name="PlayPause_Button"
-            onClick={toggle}
+            onClick={isPowerOn && toggle}
             onPointerOver={() => setHovered(true)}
             onPointerOut={() => setHovered(false)}
             geometry={nodes.PlayPause_Button.geometry}
@@ -228,6 +244,7 @@ export function Scene(props) {
             name="Power_Button"
             onPointerOver={() => setHovered(true)}
             onPointerOut={() => setHovered(false)}
+            onClick={handlePowerToggle}
             geometry={nodes.Power_Button.geometry}
             material={materials["Material.007"]}
             position={[0, 0.022, 0]}

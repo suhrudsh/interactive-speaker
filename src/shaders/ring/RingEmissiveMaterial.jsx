@@ -12,6 +12,7 @@ export function RingEmissiveMaterial({ ref, ...props }) {
       uIntensity: { value: 2.0 },
       uRotationOffset: { value: 0 },
       uAudioLevel: { value: 1 },
+      uPowerProgress: { value: 0 },
     }),
     [],
   );
