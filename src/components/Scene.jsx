@@ -79,7 +79,26 @@ export function Scene(props) {
     lightRingMaterialRef.current.uniforms.uAudioLevel.value = 1 + level;
   });
 
+  function bouncePress(ref) {
+    if (!ref.current) return;
+    const baseY = ref.current.position.y;
+    gsap.killTweensOf(ref.current.position);
+    gsap
+      .timeline()
+      .to(ref.current.position, {
+        y: baseY - 0.0005,
+        duration: 0.08,
+        ease: "power2.out",
+      })
+      .to(ref.current.position, {
+        y: baseY,
+        duration: 0.18,
+        ease: "elastic.out(1, 0.5)",
+      });
+  }
+
   function handleVolumeUp() {
+    bouncePress(volumeUpButtonRef);
     if (!isPowerOn) return;
     const next = Math.min(Math.round((volume + 0.1) * 10) / 10, 1);
     setVolume(next);
@@ -100,6 +119,7 @@ export function Scene(props) {
   }
 
   function handleVolumeDown() {
+    bouncePress(volumeDownButtonRef);
     if (!isPowerOn) return;
     const next = Math.max(Math.round((volume - 0.1) * 10) / 10, 0);
     setVolume(next);
@@ -125,6 +145,7 @@ export function Scene(props) {
   }, [audioEl, volume]);
 
   function handlePowerToggle() {
+    bouncePress(powerButtonRef);
     if (isPowerOn) setIsPowerOn(false);
     if (isPlaying) handleAudioToggle();
     gsap.to(lightRingMaterialRef.current.uniforms.uPowerProgress, {
@@ -270,7 +291,10 @@ export function Scene(props) {
           <mesh
             ref={playButtonRef}
             name="PlayPause_Button"
-            onClick={isPowerOn && handleAudioToggle}
+            onClick={() => {
+              bouncePress(playButtonRef);
+              isPowerOn && handleAudioToggle();
+            }}
             onPointerOver={() => setHovered(true)}
             onPointerOut={() => setHovered(false)}
             geometry={nodes.PlayPause_Button.geometry}
