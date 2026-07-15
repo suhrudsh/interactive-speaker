@@ -4,7 +4,7 @@ import * as THREE from "three";
 import vertexShader from "./vertex.glsl";
 import fragmentShader from "./fragment.glsl";
 
-export function RingEmissiveMaterial({ ref, ...props }) {
+export function RingEmissiveMaterial({ ref, volume, ...props }) {
   const uniforms = useMemo(
     () => ({
       uColorOne: { value: new THREE.Color("#00C2FF") },
@@ -13,6 +13,8 @@ export function RingEmissiveMaterial({ ref, ...props }) {
       uRotationOffset: { value: 0 },
       uAudioLevel: { value: 1 },
       uPowerProgress: { value: 0 },
+      uAudioVolume: { value: volume },
+      uVolumeMode: { value: 0 },
     }),
     [],
   );

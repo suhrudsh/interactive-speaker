@@ -80,21 +80,49 @@ export function Scene(props) {
   });
 
   function handleVolumeUp() {
-    setVolume((prevVolume) =>
-      Math.min(Math.round((prevVolume + 0.1) * 10) / 10, 1),
-  );
+    if (!isPowerOn) return;
+    const next = Math.min(Math.round((volume + 0.1) * 10) / 10, 1);
+    setVolume(next);
+    gsap.to(lightRingMaterialRef.current.uniforms.uAudioVolume, {
+      value: next,
+      duration: 0.2,
+    });
+    gsap.killTweensOf(lightRingMaterialRef.current.uniforms.uVolumeMode);
+    gsap.to(lightRingMaterialRef.current.uniforms.uVolumeMode, {
+      value: 1,
+      duration: 0.15,
+    });
+    gsap.to(lightRingMaterialRef.current.uniforms.uVolumeMode, {
+      value: 0,
+      duration: 0.3,
+      delay: 1.2,
+    });
   }
 
   function handleVolumeDown() {
-  setVolume((prevVolume) =>
-    Math.max(Math.round((prevVolume - 0.1) * 10) / 10, 0),
-);
+    if (!isPowerOn) return;
+    const next = Math.max(Math.round((volume - 0.1) * 10) / 10, 0);
+    setVolume(next);
+    gsap.to(lightRingMaterialRef.current.uniforms.uAudioVolume, {
+      value: next,
+      duration: 0.2,
+    });
+    gsap.killTweensOf(lightRingMaterialRef.current.uniforms.uVolumeMode);
+    gsap.to(lightRingMaterialRef.current.uniforms.uVolumeMode, {
+      value: 1,
+      duration: 0.15,
+    });
+    gsap.to(lightRingMaterialRef.current.uniforms.uVolumeMode, {
+      value: 0,
+      duration: 0.3,
+      delay: 1.2,
+    });
   }
 
-useEffect(() => {
-  if (!audioEl) return;
-  audioEl.volume = volume;
-}, [audioEl, volume]);
+  useEffect(() => {
+    if (!audioEl) return;
+    audioEl.volume = volume;
+  }, [audioEl, volume]);
 
   function handlePowerToggle() {
     if (isPowerOn) setIsPowerOn(false);
@@ -237,7 +265,7 @@ useEffect(() => {
             // material={materials["Material.001"]}
             position={[0, 0.022, 0]}
           >
-            <RingEmissiveMaterial ref={lightRingMaterialRef} />
+            <RingEmissiveMaterial ref={lightRingMaterialRef} volume={volume} />
           </mesh>
           <mesh
             ref={playButtonRef}
