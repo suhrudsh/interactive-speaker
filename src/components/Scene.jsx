@@ -40,7 +40,7 @@ export function Scene(props) {
     `${import.meta.env.BASE_URL}speaker-desk-scene-optimised.glb`,
   );
 
-  const { actions } = useAnimations(animations, group);
+  const { actions, mixer } = useAnimations(animations, group);
   useEffect(() => {
     if (!actions.CameraAction) return;
 
@@ -48,6 +48,7 @@ export function Scene(props) {
       actions.CameraAction.reset().setLoop(LoopOnce, 1);
       actions.CameraAction.clampWhenFinished = true;
       actions.CameraAction.play();
+      mixer.addEventListener("finished", handlePowerToggle);
     }, 1000);
 
     return () => clearTimeout(timeoutId);
