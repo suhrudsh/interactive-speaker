@@ -4,6 +4,7 @@ export function useSpeakerAudio() {
   const [audioEl, setAudioEl] = useState(null);
   const analyserRef = useRef(null);
   const dataRef = useRef(null);
+  const [currentTrack, setCurrentTrack] = useState(null);
   const trackRef = useRef(null);
   const tracksRef = useRef(null); // cache the fetched list
   const ctxRef = useRef(null);
@@ -25,7 +26,7 @@ export function useSpeakerAudio() {
     let next;
     do {
       next = tracks[Math.floor(Math.random() * tracks.length)];
-    } while (next.id === trackRef.current?.id); // avoid immediate repeat
+    } while (next.id === currentTrack?.id); // avoid immediate repeat
     return next;
   }, []);
 
@@ -37,8 +38,7 @@ export function useSpeakerAudio() {
       audioEl.removeEventListener("play", handlePlayRef.current);
     }
 
-    trackRef.current = track;
-
+    setCurrentTrack(track);
     if (!ctxRef.current) {
       ctxRef.current = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -108,6 +108,6 @@ export function useSpeakerAudio() {
     getLevel,
     isPlaying,
     audioEl,
-    currentTrack: () => trackRef.current,
+    currentTrack,
   };
 }

@@ -21,7 +21,14 @@ import { RingEmissiveMaterial } from "../shaders/ring/RingEmissiveMaterial";
 import { useSpeakerAudio } from "../utils/useSpeakerAudio";
 import gsap from "gsap";
 
-export function Scene(props) {
+export function Scene({
+  handleAudioToggle,
+  getLevel,
+  isPlaying,
+  audioEl,
+  audioContext,
+  ...props
+}) {
   const group = useRef();
   const leafTexture = useTexture(`${import.meta.env.BASE_URL}leaf-gobo.webp`);
   const leafPlaneRef = useRef();
@@ -68,9 +75,6 @@ export function Scene(props) {
     leafPlaneRef.current.position.x = basePosition.current.x + noiseX * 0.01;
     leafPlaneRef.current.rotation.z = noiseRotZ * 0.03;
   });
-
-  const { handleAudioToggle, getLevel, isPlaying, audioEl, audioContext } =
-    useSpeakerAudio();
 
   useFrame((state, delta) => {
     if (!lightRingMaterialRef.current || !isPowerOn) return;
