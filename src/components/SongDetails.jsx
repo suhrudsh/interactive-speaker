@@ -16,7 +16,42 @@ export function SongDetails({ audioEl, track, isPlaying }) {
     return () => audioEl.removeEventListener("timeupdate", handleTimeUpdate);
   }, [audioEl]);
 
-  if (!track) return null;
+  if (!track) {
+    return (
+      <div className="absolute top-4 left-1/2 z-10 flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 flex-col justify-center gap-1 rounded-xl bg-neutral-800/90 p-4 sm:left-4 sm:w-auto sm:max-w-none sm:min-w-80 sm:translate-x-0 sm:gap-2 sm:p-6">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-0.75">
+            <span
+              className="eq-bar w-0.75 rounded-full bg-[#00C2FF]"
+              style={{ animationPlayState: "paused" }}
+            />
+            <span
+              className="eq-bar w-0.75 rounded-full bg-[#00C2FF]"
+              style={{ animationPlayState: "paused" }}
+            />
+            <span
+              className="eq-bar w-0.75 rounded-full bg-[#1500CA]"
+              style={{ animationPlayState: "paused" }}
+            />
+            <span
+              className="eq-bar w-0.75 rounded-full bg-[#00C2FF]"
+              style={{ animationPlayState: "paused" }}
+            />
+          </div>
+          <span className="text-[11px] tracking-wider text-neutral-400 uppercase">
+            Paused
+          </span>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <p className="text-sm text-neutral-400">Nothing playing yet</p>
+          <p className="text-xs text-neutral-500">
+            Press the play button on the speaker to start.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="absolute top-4 left-1/2 z-10 flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 flex-col justify-center gap-2 rounded-xl bg-neutral-800/90 p-4 sm:left-4 sm:w-auto sm:max-w-none sm:min-w-80 sm:translate-x-0 sm:gap-4 sm:p-6">
