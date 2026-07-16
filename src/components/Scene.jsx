@@ -69,7 +69,8 @@ export function Scene(props) {
     leafPlaneRef.current.rotation.z = noiseRotZ * 0.03;
   });
 
-  const { handleAudioToggle, getLevel, isPlaying, audioEl } = useSpeakerAudio();
+  const { handleAudioToggle, getLevel, isPlaying, audioEl, audioContext } =
+    useSpeakerAudio();
 
   useFrame((state, delta) => {
     if (!lightRingMaterialRef.current || !isPowerOn) return;
@@ -144,8 +145,24 @@ export function Scene(props) {
     audioEl.volume = volume;
   }, [audioEl, volume]);
 
+  const toggleOnSound = useMemo(
+    () => new Audio(`${import.meta.env.BASE_URL}audio/power-on.mp3`),
+    [],
+  );
+  const toggleOffSound = useMemo(
+    () => new Audio(`${import.meta.env.BASE_URL}audio/power-off.mp3`),
+    [],
+  );
+
+  function playToggleTone(on) {
+    const sound = on ? toggleOnSound : toggleOffSound;
+    sound.currentTime = 0;
+    sound.play().catch(() => {}); // swallow autoplay-policy rejections
+  }
+
   function handlePowerToggle() {
     bouncePress(powerButtonRef);
+    playToggleTone(!isPowerOn);
     if (isPowerOn) setIsPowerOn(false);
     if (isPlaying) handleAudioToggle();
     gsap.to(lightRingMaterialRef.current.uniforms.uPowerProgress, {
