@@ -27,6 +27,7 @@ export function Scene({
   isPlaying,
   audioEl,
   audioContext,
+  gainRef,
   ...props
 }) {
   const group = useRef();
@@ -145,9 +146,9 @@ export function Scene({
   }
 
   useEffect(() => {
-    if (!audioEl) return;
-    audioEl.volume = volume;
-  }, [audioEl, volume]);
+    if (!gainRef.current) return;
+    gainRef.current.gain.value = volume;
+  }, [gainRef.current, volume]);
 
   const toggleOnSound = useMemo(
     () => new Audio(`${import.meta.env.BASE_URL}audio/power-on.mp3`),

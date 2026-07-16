@@ -12,6 +12,7 @@ export function useSpeakerAudio() {
   const handlePauseRef = useRef(() => setIsPlaying(false));
   const handlePlayRef = useRef(() => setIsPlaying(true));
   const handleEndedRef = useRef();
+  const gainRef = useRef(null);
 
   const loadTracks = useCallback(async () => {
     if (!tracksRef.current) {
@@ -47,11 +48,17 @@ export function useSpeakerAudio() {
 
     const source = ctxRef.current.createMediaElementSource(newAudioEl);
     const analyser = ctxRef.current.createAnalyser();
+    const gain = ctxRef.current.createGain();
+
+    gain.gain.value = gainRef.current?.gain.value ?? 1; // carry volume across track swaps
     analyser.fftSize = 256;
+
     source.connect(analyser);
-    analyser.connect(ctxRef.current.destination);
+    analyser.connect(gain);
+    gain.connect(ctxRef.current.destination);
 
     analyserRef.current = analyser;
+    gainRef.current = gain;
     dataRef.current = new Uint8Array(analyser.frequencyBinCount);
 
     newAudioEl.addEventListener("ended", handleEndedRef.current);
@@ -109,5 +116,6 @@ export function useSpeakerAudio() {
     isPlaying,
     audioEl,
     currentTrack,
+    gainRef,
   };
 }

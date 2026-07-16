@@ -13,6 +13,7 @@ function App() {
     audioEl,
     audioContext,
     currentTrack,
+    gainRef,
   } = useSpeakerAudio();
 
   return (
@@ -32,6 +33,7 @@ function App() {
               isPlaying={isPlaying}
               audioEl={audioEl}
               audioContext={audioContext}
+              gainRef={gainRef}
             />
             <Environment
               files="EnvironmentMap.exr"
